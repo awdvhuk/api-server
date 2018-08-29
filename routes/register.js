@@ -3,7 +3,6 @@ const hash = require('../hash');
 const db = require('../db/mongo-db');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
 const serverData = require('../serverData');
 const uniqueLogin = require('../middlewares/uniqueLogin');
 const upload = multer({ dest: './public/uploads/' });
@@ -27,7 +26,7 @@ router.post('/', upload.single('avatarIMG'), uniqueLogin, function (req, res) {
 
         var token = jwt.sign(newUser, serverData.secretKey);
         return res.send({ cookie: `user=${token}; path=/`, user: newUser });
-    })
+    });
 });
 
 module.exports = router;

@@ -21,6 +21,7 @@ const deleteAvatar = require('./routes/deleteAvatar');
 const deleteUser = require('./routes/deleteUser');
 const fieldEdit = require('./routes/fieldEdit');
 const uploadFile = require('./routes/uploadFile');
+const fbTokenCheck=require('./routes/fbTokenCheck');
 
 const jsonParser = bodyParser();
 
@@ -82,6 +83,7 @@ app.use('/delete_avatar', deleteAvatar);
 app.use('/delete_account', deleteUser);
 app.use('/field_edit', fieldEdit);
 app.use('/upload_file', uploadFile);
+app.use('/fb_token_check', fbTokenCheck);
 
 db(function () {
     io.on('connection', function (socket) {
