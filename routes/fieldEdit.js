@@ -4,6 +4,7 @@ const multer = require('multer');
 const jwt = require('jsonwebtoken');
 const serverData = require('../serverData');
 const upload = multer({ dest: './public/uploads/' });
+const { Users } = require('../db/postgresql');
 
 router.post('/', upload.single('avatarIMG'), async function (req, res) {
   let { login, field, newValue, tokenRequest } = req.body;

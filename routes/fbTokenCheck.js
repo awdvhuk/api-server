@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const serverData = require('../serverData');
 const db = require('../db/mongo-db');
 const axios = require('axios');
+const { Users } = require('../db/postgresql');
 
 router.post('/', (req, res) => {
   axios.post('https://graph.facebook.com/me?fields=name,email',
@@ -14,7 +15,7 @@ router.post('/', (req, res) => {
           var token = jwt.sign(user, serverData.secretKey);
           return res.send({ cookie: `user=${token}; path=/`, user });
         }
-        let date = new Date()
+        let date = new Date();
         date.setHours(0, 0, 0, 0);
         let newUser = {
           login: fbRes.data.email,

@@ -1,18 +1,16 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
+const jsonParser = require('body-parser')();
 const cookieParser = require('cookie-parser');
 const serverData = require('./serverData');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-
-app.io = io;
 const db = require('./db/mongo-db');
+const { sequelize, Users } = require('./db/postgresql');
 
 const addUser = require('./routes/register');
 const authorize = require('./routes/authorize');
 const login = require('./routes/login');
-
 const getUser = require('./routes/getUser');
 const getusersArr = require('./routes/getUsersArr');
 const editUser = require('./routes/editUser');
@@ -21,10 +19,9 @@ const deleteAvatar = require('./routes/deleteAvatar');
 const deleteUser = require('./routes/deleteUser');
 const fieldEdit = require('./routes/fieldEdit');
 const uploadFile = require('./routes/uploadFile');
-const fbTokenCheck=require('./routes/fbTokenCheck');
+const fbTokenCheck = require('./routes/fbTokenCheck');
 
-const jsonParser = bodyParser();
-
+app.io = io;
 app.use(express.static(__dirname));
 app.use(jsonParser);
 app.use(cookieParser());
@@ -84,6 +81,15 @@ app.use('/delete_account', deleteUser);
 app.use('/field_edit', fieldEdit);
 app.use('/upload_file', uploadFile);
 app.use('/fb_token_check', fbTokenCheck);
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Success connetion to PostrgeSQL');
+  })
+  .catch(err => {
+    console.error('Fail to connect to the database:', err);
+  });
 
 db(function () {
     io.on('connection', function (socket) {

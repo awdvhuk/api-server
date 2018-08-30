@@ -1,13 +1,32 @@
 const router = require('express').Router();
 const db = require('../db/mongo-db');
+const { Users } = require('../db/postgresql');
 
 router.post('/', function (req, res) {
-  db.getArr(makeFilter(req.body.filter), req.body.sort, (err, users) => {
-    for (let i = 0; i < users.length; i++) {
-      delete users[i].password;
-    }
-    return res.send(users);
-  });
+  let sort = [[Object.keys(req.body.sort)[0], 'DESC']];
+  if (req.body.sort[sort[0][0]] === 1) {
+    sort[0][1] = 'ASC';
+  }
+  Users.findAll(
+    {
+      where: makeFilter(req.body.filter),
+      order: sort,
+      attributes: {
+        exclude:
+          ['password', 'id', 'avatar', 'createdAt', 'updatedAt']
+      }
+    })
+    .then(arr => {
+      arr = JSON.parse(JSON.stringify(arr))
+      return res.send(arr)
+    })
+
+  // db.getArr(makeFilter(req.body.filter), req.body.sort, (err, users) => {
+  //   for (let i = 0; i < users.length; i++) {
+  //     delete users[i].password;
+  //   }
+  //   return res.send(users);
+  // });
 });
 
 const makeFilter = (filter) => {
@@ -21,16 +40,28 @@ const makeFilter = (filter) => {
     filterParams.$or = [
       {
         ['login']: {
-          $regex: new RegExp(filter.loginName),
-          $options: 'i'
+          $iLike: `%${filter.loginName}%`
         }
       },
       {
         ['name']: {
-          $regex: new RegExp(filter.loginName),
-          $options: 'i'
+          $iLike: `%${filter.loginName}%`
         }
-      }];
+      }
+    ]
+    // filterParams.$or = [
+    //   {
+    //     ['login']: {
+    //       $regex: new RegExp(filter.loginName),
+    //       $options: 'i'
+    //     }
+    //   },
+    //   {
+    //     ['name']: {
+    //       $regex: new RegExp(filter.loginName),
+    //       $options: 'i'
+    //     }
+    //   }];
   }
 
   if (filter.age.min != '18') {
@@ -48,7 +79,7 @@ const makeFilter = (filter) => {
   if (filter.registerDate === '' || filter.registerDate === '0001-01-01') {
     return filterParams;
   }
-  
+
   let date = new Date(filter.registerDate)
   date.setHours(0, 0, 0, 0);
 

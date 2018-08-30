@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const serverData = require('../serverData');
 const uniqueLogin = require('../middlewares/uniqueLogin');
 const upload = multer({ dest: './public/uploads/' });
+const { Users } = require('../db/postgresql');
 
 router.post('/', upload.single('avatarIMG'), uniqueLogin, function (req, res) {
     let newUser = req.body;
@@ -14,19 +15,27 @@ router.post('/', upload.single('avatarIMG'), uniqueLogin, function (req, res) {
     newUser.age = +newUser.age;
     newUser.password = hash(newUser.password)
     newUser.admin = false;
-    
+
     if (req.file) {
-        newUser.avatar = req.file.filename;
+        newUser.avatar = `http://localhost:4000/public/uploads/${req.file.filename}`;
     }
 
-    db.add(newUser, function (err, id) {
-
-        newUser._id = id;
+    Users.create(newUser).then((user) => {
+        newUser._id = user.get().id;
         delete newUser.password;
 
         var token = jwt.sign(newUser, serverData.secretKey);
         return res.send({ cookie: `user=${token}; path=/`, user: newUser });
     });
+
+    // db.add(newUser, function (err, id) {
+
+    //     newUser._id = id;
+    //     delete newUser.password;
+
+    //     var token = jwt.sign(newUser, serverData.secretKey);
+    //     return res.send({ cookie: `user=${token}; path=/`, user: newUser });
+    // });
 });
 
 module.exports = router;

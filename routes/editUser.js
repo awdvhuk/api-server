@@ -7,6 +7,7 @@ const fs = require('fs');
 const serverData = require('../serverData');
 const uniqueLogin = require('../middlewares/uniqueLogin');
 const upload = multer({ dest: './public/uploads/' });
+const { Users } = require('../db/postgresql');
 
 router.post('/', upload.single('avatarIMG'), uniqueLogin, async function (req, res) {
   req.body.age = +req.body.age;
