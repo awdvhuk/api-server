@@ -34,26 +34,6 @@ router.post('/', (req, res) => {
 
             return res.send([false]);
         });
-
-    // db.get(decoded.login, (err, user) => {
-    //     if (err) {
-    //         return res.send(false);
-    //     }
-    //     if (user === null) {
-    //         return res.send(false);
-    //     }
-    //     if (
-    //         decoded.name == user.name &&
-    //         decoded.age == user.age &&
-    //         decoded.avatar == user.avatar &&
-    //         decoded._id == (user._id + '')
-    //     ) {
-    //         delete decoded.iat;
-    //         return res.send([true, decoded]);
-    //     }
-
-    //     return res.send([false]);
-    // })
 })
 
 module.exports = router;

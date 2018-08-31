@@ -13,20 +13,13 @@ router.post('/', function (req, res) {
       order: sort,
       attributes: {
         exclude:
-          ['password', 'id', 'avatar', 'createdAt', 'updatedAt']
+          ['password', 'avatar', 'createdAt', 'updatedAt']
       }
     })
     .then(arr => {
       arr = JSON.parse(JSON.stringify(arr))
       return res.send(arr)
     })
-
-  // db.getArr(makeFilter(req.body.filter), req.body.sort, (err, users) => {
-  //   for (let i = 0; i < users.length; i++) {
-  //     delete users[i].password;
-  //   }
-  //   return res.send(users);
-  // });
 });
 
 const makeFilter = (filter) => {

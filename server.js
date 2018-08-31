@@ -83,25 +83,23 @@ app.use('/upload_file', uploadFile);
 app.use('/fb_token_check', fbTokenCheck);
 
 sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Success connetion to PostrgeSQL');
-  })
-  .catch(err => {
-    console.error('Fail to connect to the database:', err);
-  });
-
-db(function () {
-    io.on('connection', function (socket) {
-        // console.log('a user connected');
-
-        socket.on('disconnect', function () {
-            // console.log('user disconnected');
-        });
+    .authenticate()
+    .then(() => {
+        console.log('Success connetion to PostrgeSQL');
+    })
+    .catch(err => {
+        console.error('Fail to connect to the database:', err);
     });
 
-    http.listen(serverData.server, function () {
-        let time = new Date().toLocaleString('ru');
-        console.log(`\n /--------------------\\\n  Server working since \n  ${time} \n \\--------------------/\n`);
+io.on('connection', function (socket) {
+    // console.log('a user connected');
+
+    socket.on('disconnect', function () {
+        // console.log('user disconnected');
     });
+});
+
+http.listen(serverData.server, function () {
+    let time = new Date().toLocaleString('ru');
+    console.log(`\n /--------------------\\\n  Server working since \n  ${time} \n \\--------------------/\n`);
 });

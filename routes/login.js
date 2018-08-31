@@ -23,19 +23,6 @@ router.post('/', (req, res) => {
             var token = jwt.sign(user, serverData.secretKey);
             return res.send({ cookie: `user=${token}; path=/`, user });
         });
-
-    // db.get(req.body.login, (err, user) => {
-    //     if (user == null) {
-    //         return res.send('user');
-    //     }
-    //     if (user.password != hash(req.body.password)) {
-    //         return res.send('password');
-    //     }
-
-    //     delete user.password;
-    //     var token = jwt.sign(user, serverData.secretKey);
-    //     return res.send({ cookie: `user=${token}; path=/`, user });
-    // });
 });
 
 module.exports = router;

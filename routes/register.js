@@ -27,15 +27,6 @@ router.post('/', upload.single('avatarIMG'), uniqueLogin, function (req, res) {
         var token = jwt.sign(newUser, serverData.secretKey);
         return res.send({ cookie: `user=${token}; path=/`, user: newUser });
     });
-
-    // db.add(newUser, function (err, id) {
-
-    //     newUser._id = id;
-    //     delete newUser.password;
-
-    //     var token = jwt.sign(newUser, serverData.secretKey);
-    //     return res.send({ cookie: `user=${token}; path=/`, user: newUser });
-    // });
 });
 
 module.exports = router;

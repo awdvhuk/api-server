@@ -14,11 +14,4 @@ module.exports = (req, res, next) => {
         }
         return res.send('login error');
     });
-
-    // db.get(req.body.login, (err, user) => {
-    //     if (user == null) {
-    //         return next();
-    //     }
-    //     return res.send('login error');
-    // });
 }
